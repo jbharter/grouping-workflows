@@ -4,7 +4,7 @@ on:
     types: ["offboard"]
 
 jobs:
-  offboard:
+  job_name:
     runs-on: ubuntu-latest
     steps:
       - name: "Get repo"
