@@ -15,8 +15,7 @@
           "associates": [
             "keeper",
             "leaver",
-            "alice",
-            "bob"
+            "alice"
           ],
           "location": "TEST",
           "members": [
@@ -31,8 +30,7 @@
           "members": [
             "keeper",
             "leaver",
-            "alice",
-            "bob"
+            "alice"
           ]
         }
       ]
@@ -52,8 +50,7 @@
         {
           "associates": [
             "keeper",
-            "alice",
-            "bob"
+            "alice"
           ],
           "location": "TEST",
           "members": [
@@ -67,8 +64,7 @@
           "location": "MARS",
           "members": [
             "keeper",
-            "alice",
-            "bob"
+            "alice"
           ]
         }
       ]
