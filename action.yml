@@ -1,15 +1,5 @@
-name: "Eng Meta Butler"
-description: "Perform automation tasks for eng_meta"
-#inputs:
-#  githubToken:
-#    description: "Token used to pull repo"
-#    required: true
-#  action:
-#    description: "what to do"
-#    required: true
-#  targetUsers:
-#    description: "username"
-#    required: true
+name: "Terraorg Butler"
+description: "Perform automation tasks for terraorg, or exception groups"
 runs:
   using: 'node16'
   main: 'index.js'
