@@ -28,6 +28,8 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           branch: automation/${{github.event.action}}/${{join(fromJSON(steps.offboard_flow.outputs.users),'-')}}
+          commit-message: |
+            [Automation] ${{github.event.action}} users ${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}
           title: |
             [Automation] ${{github.event.action}} users ${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}
           body: |
