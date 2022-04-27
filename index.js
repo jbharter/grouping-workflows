@@ -6,14 +6,14 @@ async function run() {
 //        core.info(`context: ${JSON.stringify(github.context)}`)
 
         const payload = github.context.payload
-        const action = github.context.action
+        const action = github.context.payload.action
 
 
         //const action = core.getInput('action')
         //const targetUsers = core.getInput('targetUsers')
 
         core.info(`payload: ${JSON.stringify(payload)}`)
-        core.info(`action: ${JSON.stringify(action)}`)
+        core.info(`action: ${JSON.stringify(payload.action)}`)
         //core.info(`event_type: ${core.getInput('event_type')}`)
         //core.info(`client_payload: ${core.getInput('client_payload')}`)
 
