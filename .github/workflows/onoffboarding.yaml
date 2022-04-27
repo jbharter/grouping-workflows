@@ -34,8 +34,8 @@ jobs:
             [Automation] ${{github.event.action}} users
           body: |
             Automated pull request triggered by API call
-            Actor: *${{github.actor}}*
-            Action: *${{github.event.action}}* 
+            Actor: **@${{github.actor}}**
+            Action: **${{github.event.action}}** 
             Users: [${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}]
 #        with:
 #          event_type: ${{ github.event_type }}
