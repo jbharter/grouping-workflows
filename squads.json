@@ -1,0 +1,78 @@
+{
+  "squads": [
+    {
+      "id": "test",
+      "metadata": {
+        "manager": "test",
+        "pm": [
+          "test"
+        ],
+        "slack": "#test"
+      },
+      "name": "Test Squad A",
+      "team": [
+        {
+          "associates": [
+            "keeper",
+            "leaver",
+            "alice",
+            "bob"
+          ],
+          "location": "TEST",
+          "members": [
+            "eve"
+          ]
+        },
+        {
+          "associates": [
+            "eve"
+          ],
+          "location": "US",
+          "members": [
+            "keeper",
+            "leaver",
+            "alice",
+            "bob"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "null",
+      "metadata": {
+        "manager": "nullleader",
+        "pm": [
+          "test",
+          "null"
+        ],
+        "slack": "#null"
+      },
+      "name": "Null Squad A",
+      "team": [
+        {
+          "associates": [
+            "keeper",
+            "alice",
+            "bob"
+          ],
+          "location": "TEST",
+          "members": [
+            "eve"
+          ]
+        },
+        {
+          "associates": [
+            "eve"
+          ],
+          "location": "MARS",
+          "members": [
+            "keeper",
+            "alice",
+            "bob"
+          ]
+        }
+      ]
+    }
+  ],
+  "version": "v1"
+}

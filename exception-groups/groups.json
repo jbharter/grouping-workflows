@@ -1,0 +1,20 @@
+{
+  "domain": "example.com",
+  "groups": {
+    "test-group-a": {
+      "create_google_group": true,
+      "create_okta_group": true,
+      "description": "A test exception group",
+      "google_group_name": "test@example.com",
+      "members": {
+        "alison": "member",
+        "steven": "member",
+        "katherine": "member",
+        "alice": "member",
+        "bob": "member",
+        "leaver": "member"
+      },
+      "okta_group_name": ""
+    }
+  }
+}
