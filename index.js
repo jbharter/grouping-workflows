@@ -147,6 +147,9 @@ async function test(testData) {
     let action = "offboard";
     let users = testData.client_payload.users
 
+    console.log("::set-output name=foo::bar")
+    core.info("::set-output name=core::bar")
+
     switch (action) {
         // case "onboard":
         //     users.filter(s => s !== "").forEach(onboard)

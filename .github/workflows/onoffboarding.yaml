@@ -19,6 +19,10 @@ jobs:
       - name: Get output
         run: echo "The action was ${{ steps.run_automation.outputs.action }}"
       - name: Get output
+        run: echo "The action was ${{ steps.run_automation.outputs.foo }}"
+      - name: Get output
+        run: echo "The action was ${{ steps.run_automation.outputs.core }}"
+      - name: Get output
         run: echo "The users are ${{join(steps.run_automation.outputs.users.*, '-')}}"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
