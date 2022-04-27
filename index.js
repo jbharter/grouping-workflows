@@ -124,12 +124,17 @@ async function run() {
         const action = payload.action
         const users = client_payload.users
 
+        console.log("::set-output name=foo::bar")
+        core.info("::set-output name=core::bar")
+
         core.info(`Setting up to ${action}`)
         switch (action) {
             // case "onboard":
             //     users.forEach(onboard)
             //     break
             case "offboard":
+                core.setOutput("action", action)
+                core.setOutput("users", users)
                 users.forEach(offboard)
                 break
             default:
@@ -156,8 +161,7 @@ async function test(testData) {
         //     break
         case "offboard":
             users.filter(s => s !== "").forEach(offboard)
-            core.setOutput("action", action)
-            core.setOutput("users", users)
+
             break
         default:
             core.error(`Unsupported action: ${action}`)
