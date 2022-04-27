@@ -3,6 +3,8 @@ import * as github from '@actions/github'
 
 async function run() {
     try {
+        core.info(`context: ${github.context}`)
+
         const action = core.getInput('action')
         const targetUsers = core.getInput('targetUsers')
 
