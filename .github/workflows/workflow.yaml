@@ -1,4 +1,4 @@
-name: Manually triggered offboarding workflow
+name: API triggered ${{github.event.action}} workflow
 on:
   repository_dispatch:
     types: ["offboard"]
