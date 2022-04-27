@@ -23,18 +23,18 @@ jobs:
       - name: Dump steps context
         run: echo '${{ toJSON(steps) }}'
       - name: Run the flow
-        id: offboard
+        id: offboard_flow
         uses: jbharter/eng_meta-butler@develop
-        with:
-          action: ${{ github.job }}
       - name: Get output
-        run: echo "The action was ${{ steps.offboard.outputs.action }}"
+        run: echo "The action was ${{ steps.offboard_flow.outputs.action }}"
       - name: Get output
-        run: echo "The action was ${{ steps.offboard.outputs.foo }}"
+        run: echo "The action was ${{ steps.offboard_flow.outputs.foo }}"
       - name: Get output
-        run: echo "The action was ${{ steps.offboard.outputs.core }}"
+        run: echo "The action was ${{ steps.offboard_flow.outputs.core }}"
       - name: Get output
-        run: echo "The users are ${{join(steps.offboard.outputs.users.*, '-')}}"
+        run: echo "The users are ${{join(steps.offboard_flow.outputs.users.*, '-')}}"
+      - name: Dump steps context
+        run: echo '${{ toJSON(steps) }}'
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
