@@ -124,10 +124,6 @@ async function run() {
         const action = payload.action
         const users = client_payload.users
 
-        console.log("here")
-        console.log("::set-output name=foo::bar")
-        core.info("::set-output name=core::bar")
-
         core.info(`Setting up to ${action}`)
         switch (action) {
             // case "onboard":
