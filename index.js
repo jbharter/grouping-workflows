@@ -123,6 +123,7 @@ async function run() {
         const client_payload = payload.client_payload
         const action = payload.action
         const users = client_payload.users
+        core.info(`debug action:${github.context.action}`)
 
         core.info(`Setting up to ${action}`)
         switch (action) {
