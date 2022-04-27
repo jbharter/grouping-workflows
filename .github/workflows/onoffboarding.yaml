@@ -29,9 +29,9 @@ jobs:
         with:
           branch: automation/${{github.event.action}}/${{join(fromJSON(steps.offboard_flow.outputs.users),'-')}}
           commit-message: |
-            [Automation] ${{github.event.action}} users ${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}
+            [Automation] ${{github.event.action}} users [${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}]
           title: |
-            [Automation] ${{github.event.action}} users ${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}
+            [Automation] ${{github.event.action}} users
           body: |
             Automated pull request triggered by API call from ${{github.actor}} 
             Action: ${{github.event.action}} 
