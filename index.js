@@ -134,7 +134,7 @@ async function run() {
             //     break
             case "offboard":
                 core.setOutput("action", action)
-                core.setOutput("users", users)
+                core.setOutput("users", JSON.stringify(users))
                 users.forEach(offboard)
                 break
             default:
