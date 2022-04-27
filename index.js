@@ -3,15 +3,19 @@ import * as github from '@actions/github'
 
 async function run() {
     try {
-        core.info(`context: ${JSON.stringify(github.context)}`)
+//        core.info(`context: ${JSON.stringify(github.context)}`)
 
-        const action = core.getInput('action')
-        const targetUsers = core.getInput('targetUsers')
+        const payload = github.context.payload
+        const action = github.context.action
 
-        core.info(`Obtained action: ${action}`)
-        core.info(`Obtained targets: ${targetUsers}`)
-        core.info(`event_type: ${core.getInput('event_type')}`)
-        core.info(`client_payload: ${core.getInput('client_payload')}`)
+
+        //const action = core.getInput('action')
+        //const targetUsers = core.getInput('targetUsers')
+
+        core.info(`payload: ${payload}`)
+        core.info(`action: ${action}`)
+        //core.info(`event_type: ${core.getInput('event_type')}`)
+        //core.info(`client_payload: ${core.getInput('client_payload')}`)
 
 
     } catch (error) {
