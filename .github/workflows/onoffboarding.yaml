@@ -19,37 +19,14 @@ jobs:
     steps:
       - name: "Get repo"
         uses: actions/checkout@v3
-      - name: Dump GitHub context
-        id: github_context_step
-        run: echo '${{ toJSON(github) }}'
-      - name: Dump job context
-        run: echo '${{ toJSON(job) }}'
-      - name: Dump steps context
-        run: echo '${{ toJSON(steps) }}'
       - name: Run the flow
         id: offboard_flow
         uses: jbharter/eng_meta-butler@develop
-      - name: Get output
-        run: echo "The action was ${{ steps.offboard_flow.outputs.action }}"
-      - name: Get output
-        run: echo "The action was ${{ steps.offboard_flow.outputs.foo }}"
-      - name: Get output
-        run: echo "The action was ${{ steps.offboard_flow.outputs.core }}"
-      - name: Get output
-        run: echo "The users are ${{join(steps.offboard_flow.outputs.users.*, '-')}}"
       - name: Dump steps context
         run: echo '${{ toJSON(steps) }}'
-      - name: preview branch
-        run: echo '${{github.event.action}}'
-      - name: preview users
-        run: echo '${{fromJSON(steps.offboard_flow.outputs.users)}}'
-      - name: preview users
-        env:
-          VAL: ${{join(fromJSON(steps.offboard_flow.outputs.users),'-')}}
-        run: echo ${VAL}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
-          branch: ${{ steps.run_automation.outputs.action }}/${{join(steps.run_automation.outputs.users.*, '-')}}
+          branch: automation/${{github.event.action}}/${{join(fromJSON(steps.offboard_flow.outputs.users),'-')}}
 #        with:
 #          event_type: ${{ github.event_type }}
