@@ -1,4 +1,4 @@
-name: API triggered ${{github.event.action}} workflow
+name: API triggered grouping workflow
 on:
   repository_dispatch:
     types: ["offboard"]

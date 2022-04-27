@@ -4,7 +4,7 @@ A github action to run automations on your terraorg style squads.
 ## Example: use API calls to open PRs to offboard users
 `.github/workflows/workflow.yaml`
 ```yaml
-name: API triggered ${{github.event.action}} workflow
+name: API triggered grouping workflow
 on:
   repository_dispatch:
     types: ["offboard"]
