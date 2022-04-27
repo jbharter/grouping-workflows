@@ -4,17 +4,21 @@ on:
     types: ["offboard"]
 
 jobs:
-  job_name:
+  onboarding_workflow:
+    if: ${{ github.event.action == 'onboard' }}
     runs-on: ubuntu-latest
     steps:
       - name: "Get repo"
         uses: actions/checkout@v3
-      - name: location
-        run: pwd
-      - name: files
-        run: ls -la
-      - name: environment
-        run: env
+      - name: Run the flow
+        id: offboard_flow
+        uses: jbharter/eng_meta-butler@develop
+  offboarding_workflow:
+    if: ${{ github.event.action == 'offboard' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: "Get repo"
+        uses: actions/checkout@v3
       - name: Dump GitHub context
         id: github_context_step
         run: echo '${{ toJSON(github) }}'
@@ -35,6 +39,8 @@ jobs:
         run: echo "The users are ${{join(steps.offboard_flow.outputs.users.*, '-')}}"
       - name: Dump steps context
         run: echo '${{ toJSON(steps) }}'
+      - name: preview branch
+        run: echo '${{github.event.action}}'
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
