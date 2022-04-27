@@ -28,13 +28,13 @@ jobs:
         with:
           action: ${{ github.job }}
       - name: Get output
-        run: echo "The action was ${{ steps.run_automation.outputs.action }}"
+        run: echo "The action was ${{ steps.offboard.outputs.action }}"
       - name: Get output
-        run: echo "The action was ${{ steps.run_automation.outputs.foo }}"
+        run: echo "The action was ${{ steps.offboard.outputs.foo }}"
       - name: Get output
-        run: echo "The action was ${{ steps.run_automation.outputs.core }}"
+        run: echo "The action was ${{ steps.offboard.outputs.core }}"
       - name: Get output
-        run: echo "The users are ${{join(steps.run_automation.outputs.users.*, '-')}}"
+        run: echo "The users are ${{join(steps.offboard.outputs.users.*, '-')}}"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
