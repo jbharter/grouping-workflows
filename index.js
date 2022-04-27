@@ -153,6 +153,8 @@ async function test(testData) {
         //     break
         case "offboard":
             users.filter(s => s !== "").forEach(offboard)
+            core.setOutput("action", action)
+            core.setOutput("users", users)
             break
         default:
             core.error(`Unsupported action: ${action}`)

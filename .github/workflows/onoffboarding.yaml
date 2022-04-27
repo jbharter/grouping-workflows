@@ -13,9 +13,12 @@ jobs:
         run: pwd
       - name: files
         run: ls -la
-      - name: Debug bits
+      - name: Run the automation
+        id: run_automation
         uses: jbharter/eng_meta-butler@develop
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
+        with:
+          branch: ${{ steps.run_automation.outputs.action }}/${{join(steps.run_automation.outputs.users.*, '-')}}
 #        with:
 #          event_type: ${{ github.event_type }}
