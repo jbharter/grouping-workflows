@@ -28,5 +28,8 @@ jobs:
         uses: peter-evans/create-pull-request@v4
         with:
           branch: automation/${{github.event.action}}/${{join(fromJSON(steps.offboard_flow.outputs.users),'-')}}
+          title: [Automation] ${{github.event.action}} users ${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}
+          body: |
+            Automated pull request triggered by API call from ${{github.actor}} to ${{github.event.action}} users ${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}
 #        with:
 #          event_type: ${{ github.event_type }}
