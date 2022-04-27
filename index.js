@@ -173,6 +173,6 @@ if (os.platform() === "darwin") {
         }
     })
 } else {
-    run()
+    await run()
 }
 
