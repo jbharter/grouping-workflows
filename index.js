@@ -5,7 +5,7 @@ async function run() {
     try {
 //        core.info(`context: ${JSON.stringify(github.context)}`)
 
-        //const payload = github.context.payload
+        const payload = github.context.payload
         const client_payload = github.context.payload.client_payload
         const action = github.context.payload.action
 
