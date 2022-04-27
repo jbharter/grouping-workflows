@@ -1,15 +1,15 @@
 name: "Eng Meta Butler"
 description: "Perform automation tasks for eng_meta"
-inputs:
+#inputs:
 #  githubToken:
 #    description: "Token used to pull repo"
 #    required: true
-  action:
-    description: "what to do"
-    required: true
-  targetUsers:
-    description: "username"
-    required: true
+#  action:
+#    description: "what to do"
+#    required: true
+#  targetUsers:
+#    description: "username"
+#    required: true
 runs:
   using: 'node16'
   main: 'index.js'

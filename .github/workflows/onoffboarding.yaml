@@ -1,7 +1,7 @@
 name: Manually triggered workflow also
 on:
   repository_dispatch:
-    types: ["debug"]
+    types: ["debug","onboard","offboard"]
 
 jobs:
   onoffboarding:
@@ -9,5 +9,5 @@ jobs:
     steps:
       - name: Debug bits
         uses: jbharter/eng_meta-butler@develop
-        with:
-          event_type: ${{ github.event_type }}
+#        with:
+#          event_type: ${{ github.event_type }}
