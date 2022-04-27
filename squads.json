@@ -14,7 +14,6 @@
         {
           "associates": [
             "keeper",
-            "leaver",
             "alice",
             "bob"
           ],
@@ -30,7 +29,6 @@
           "location": "US",
           "members": [
             "keeper",
-            "leaver",
             "alice",
             "bob"
           ]
