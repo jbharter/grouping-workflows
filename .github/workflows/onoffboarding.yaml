@@ -16,6 +16,10 @@ jobs:
       - name: Run the automation
         id: run_automation
         uses: jbharter/eng_meta-butler@develop
+      - name: Get output
+        run: echo "The action was ${{ steps.run_automation.outputs.action }}"
+      - name: Get output
+        run: echo "The users are ${{join(steps.run_automation.outputs.users.*, '-')}}"
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
