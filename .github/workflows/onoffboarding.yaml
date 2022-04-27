@@ -11,4 +11,3 @@ jobs:
         uses: jbharter/eng_meta-butler@develop
         with:
           event_type: ${{ github.event_type }}
-          client_payload: ${{ github.event.client_payload }}
