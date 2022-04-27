@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Run the flow
         id: offboard_flow
-        uses: jbharter/eng_meta-butler@develop
+        uses: jbharter/grouping-workflows@1.0.0
   offboarding_workflow:
     if: ${{ github.event.action == 'offboard' }}
     runs-on: ubuntu-latest

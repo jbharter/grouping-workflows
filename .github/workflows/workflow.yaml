@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Run the flow
         id: offboard_flow
-        uses: jbharter/eng_meta-butler@develop
+        uses: jbharter/grouping-workflows@1.0.0
   offboarding_workflow:
     if: ${{ github.event.action == 'offboard' }}
     runs-on: ubuntu-latest
@@ -21,7 +21,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Run the flow
         id: offboard_flow
-        uses: jbharter/eng_meta-butler@develop
+        uses: jbharter/grouping-workflows@1.0.0
       - name: Dump steps context
         run: echo '${{ toJSON(steps) }}'
       - name: Create Pull Request
@@ -37,5 +37,3 @@ jobs:
             Actor: **@${{github.actor}}**
             Action: **${{github.event.action}}** 
             Users: [${{join(fromJSON(steps.offboard_flow.outputs.users),',')}}]
-#        with:
-#          event_type: ${{ github.event_type }}
