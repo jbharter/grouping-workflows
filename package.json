@@ -1,16 +1,24 @@
 {
   "name": "eng_meta_butler",
   "version": "1.0.0",
-  "description": "",
+  "description": "Does eng_meta offboarding",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Jacob and Pablo",
   "license": "ISC",
   "dependencies": {
     "@actions/core": "^1.7.0",
     "@actions/github": "^5.0.1"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jbharter/eng_meta-butler.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jbharter/eng_meta-butler/issues"
+  },
+  "homepage": "https://github.com/jbharter/eng_meta-butler#readme"
 }
