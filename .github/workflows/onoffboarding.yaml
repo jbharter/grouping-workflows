@@ -7,6 +7,10 @@ jobs:
   onoffboarding:
     runs-on: ubuntu-latest
     steps:
+      - name: location
+        run: pwd
+      - name: files
+        run: ls -la
       - name: Debug bits
         uses: jbharter/eng_meta-butler@develop
 #        with:
