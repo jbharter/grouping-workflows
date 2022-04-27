@@ -15,6 +15,13 @@ jobs:
         run: ls -la
       - name: environment
         run: env
+      - name: Dump GitHub context
+        id: github_context_step
+        run: echo '${{ toJSON(github) }}'
+      - name: Dump job context
+        run: echo '${{ toJSON(job) }}'
+      - name: Dump steps context
+        run: echo '${{ toJSON(steps) }}'
       - name: Run the flow
         id: offboard
         uses: jbharter/eng_meta-butler@develop
