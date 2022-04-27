@@ -44,7 +44,9 @@ jobs:
       - name: preview users
         run: echo '${{fromJSON(steps.offboard_flow.outputs.users)}}'
       - name: preview users
-        run: echo '${{join(fromJSON(steps.offboard_flow.outputs.users),"-")}}'
+        env:
+          VAL: ${{join(fromJSON(steps.offboard_flow.outputs.users),"-")}}
+        run: echo ${VAL}
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
