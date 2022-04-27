@@ -18,7 +18,7 @@ jobs:
         uses: actions/checkout@v3
       - name: Run the flow
         id: offboard_flow
-        uses: jbharter/grouping-workflows@1.0.0
+        uses: jbharter/grouping-workflows@v0.0.1
   offboarding_workflow:
     if: ${{ github.event.action == 'offboard' }}
     runs-on: ubuntu-latest
@@ -26,7 +26,7 @@ jobs:
       - uses: actions/checkout@v3
       - name: Run the flow
         id: offboard_flow
-        uses: jbharter/grouping-workflows@1.0.0
+        uses: jbharter/grouping-workflows@v0.0.1
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v4
         with:
