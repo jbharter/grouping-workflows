@@ -16,7 +16,7 @@ async function run() {
         //core.info(`payload: ${JSON.stringify(payload)}`)
         core.info(`client_payload: ${JSON.stringify(client_payload)}`)
         core.info(`action: ${JSON.stringify(payload.action)}`)
-        //core.info(`event_type: ${core.getInput('event_type')}`)
+        core.info(`event_name: ${github.context.eventName}`)
         //core.info(`client_payload: ${core.getInput('client_payload')}`)
 
 
