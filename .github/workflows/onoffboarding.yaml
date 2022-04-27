@@ -1,10 +1,10 @@
-name: Manually triggered workflow also
+name: Manually triggered offboarding workflow
 on:
   repository_dispatch:
-    types: ["debug","onboard","offboard"]
+    types: ["offboard"]
 
 jobs:
-  onoffboarding:
+  offboard:
     runs-on: ubuntu-latest
     steps:
       - name: "Get repo"
@@ -13,9 +13,13 @@ jobs:
         run: pwd
       - name: files
         run: ls -la
-      - name: Run the automation
-        id: run_automation
+      - name: environment
+        run: env
+      - name: Run the flow
+        id: offboard
         uses: jbharter/eng_meta-butler@develop
+        with:
+          action: ${{ github.job }}
       - name: Get output
         run: echo "The action was ${{ steps.run_automation.outputs.action }}"
       - name: Get output
