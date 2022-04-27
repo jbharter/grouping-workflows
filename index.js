@@ -12,8 +12,8 @@ async function run() {
         //const action = core.getInput('action')
         //const targetUsers = core.getInput('targetUsers')
 
-        core.info(`payload: ${payload}`)
-        core.info(`action: ${action}`)
+        core.info(`payload: ${JSON.stringify(payload)}`)
+        core.info(`action: ${JSON.stringify(action)}`)
         //core.info(`event_type: ${core.getInput('event_type')}`)
         //core.info(`client_payload: ${core.getInput('client_payload')}`)
 
