@@ -21,5 +21,6 @@
   "bugs": {
     "url": "https://github.com/jbharter/eng_meta-butler/issues"
   },
-  "homepage": "https://github.com/jbharter/eng_meta-butler#readme"
+  "homepage": "https://github.com/jbharter/eng_meta-butler#readme",
+  "type": "module"
 }
