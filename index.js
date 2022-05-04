@@ -15,11 +15,6 @@ function readObject(filename){
                 if (filename.endsWith(".json")) {
                     resolve(JSON.parse(stringData));
                 }
-                // } else if (filename.endsWith(".tfvars") || filename.endsWith(".hcl")){
-                //   // do hcl parse, weirdness with module import
-                //     let thing = HCL.default.parse(stringData);
-                //     resolve(JSON.parse(thing))
-                // }
                 reject("unknown file type")
             }
         })
@@ -30,11 +25,6 @@ const exceptionGroupFile = "exception-groups/groups.json";
 const squadsFile = "squads.json";
 const platoonsFile = "platoons.json";
 
-// function onboard(user) {
-//     core.error("Onboard has not been implemented yet.")
-//     core.setFailed("Onboard has not been implemented yet.")
-// }
-
 function offboard(user) {
     let action = "offboard";
     core.info(`${action}-ing: ${user}`)
@@ -43,27 +33,6 @@ function offboard(user) {
     readObject(exceptionGroupFile)
         .then(data => {
             // do stuff
-            /* not like this
-            let write = false;
-            Object.entries(data["groups"][0])
-                .forEach(([groupname,groupval]) => {
-                    let group = groupval[0]
-                    let members = group["members"][0];
-                    if (Object.keys(members).includes(user)) {
-                        console.log(`User: "${user} found in members of exception group: "${groupname}"`)
-                        data["groups"][0][groupname][0]["members"][0] = Object.fromEntries(Object.entries(members).filter(([locuser, role]) => locuser !== user));
-                        write = true
-                    }
-                })
-            if (write) {
-                console.log(`writing new ${exceptionGroupFile} to ${action} user: ${user}`)
-                // Need this to be json first before hcl-conversion
-                let stringData = JSON.stringify(data, null, 2);
-                // Convert back to hcl
-                let hclData = HCL.default.stringify(stringData);
-                writeFileSync(exceptionGroupFile,new Uint8Array(Buffer.from(stringData)));
-            }
-            */
             let write = false;
             Object.entries(data["groups"]).forEach(([group_name,val],squadIndex) => {
                 if (Object.keys(val["members"]).includes(user)) {
@@ -116,13 +85,85 @@ function offboard(user) {
     console.log(`end run for user: ${user}`)
 }
 
+function oktausernamechange(oldoktausername,newoktausername) {
+    let action = "oktausernamechange";
+    core.info(`${action}-ing: ${oldoktausername} => ${newoktausername}`)
+
+    // TODO: check exception groups
+    readObject(exceptionGroupFile)
+        .then(data => {
+            // do stuff
+            let write = false;
+            Object.entries(data["groups"]).forEach(([group_name,val],squadIndex) => {
+                if (Object.keys(val["members"]).includes(oldoktausername)) {
+                    console.log(`User: "${oldoktausername} found in members of exception group: "${group_name}"`)
+                    let role = data["groups"][group_name]["members"][oldoktausername]
+                    delete data["groups"][group_name]["members"][oldoktausername];
+                    data["groups"][group_name]["members"][newoktausername] = role
+                    write = true
+                }
+            })
+            if (write) {
+                console.log(`writing new ${exceptionGroupFile} to ${action} user: ${oldoktausername}`)
+                writeFileSync(exceptionGroupFile,new Uint8Array(Buffer.from(JSON.stringify(data, null, 2))));
+            }
+        })
+        .catch(err => console.error(err));
+
+
+
+    // TODO: check platoons file, consider a method to replace a platoon/squad lead?
+    // readObject(platoonsFile)
+    //     .then(data => {
+    //         //console.dir(data);
+    //         // TODO: offboard in platoons.json
+    //     })
+    //     .catch(err => console.error(err));
+    // check squads file
+    readObject(squadsFile)
+        .then(data => {
+            // Offboard in squads.json
+            let write = false;
+            data["squads"].forEach((squad,squadIndex) => {
+                squad["team"].forEach((team,teamIndex) => {
+                    if (team["associates"].includes(oldoktausername)) {
+                        console.log(`User: "${oldoktausername} found in associates of squad: "${squad.id}", location: ${team.location}`)
+                        data["squads"][squadIndex]["team"][teamIndex]["associates"] = team["associates"].map(associate => {
+                            if (associate === oldoktausername){
+                                return newoktausername;
+                            } else {
+                                return associate;
+                            }
+                        });
+                        write = true;
+                    }
+                    if (team["members"].includes(oldoktausername)) {
+                        console.log(`User: "${oldoktausername} found in members of squad: "${squad.id}", location: ${team.location}`)
+                        data["squads"][squadIndex]["team"][teamIndex]["members"] = team["members"].map(associate => {
+                            if (associate === oldoktausername){
+                                return newoktausername;
+                            } else {
+                                return associate;
+                            }
+                        });
+                    }
+                })
+            })
+            if (write) {
+                console.log(`writing new ${squadsFile} to ${action} user: ${oldoktausername}`)
+                writeFileSync(squadsFile,new Uint8Array(Buffer.from(JSON.stringify(data, null, 2))));
+            }
+        })
+        .catch(err => console.error(err));
+    console.log(`end run for user: ${oldoktausername}`)
+}
+
 async function run() {
     try {
 
         const payload = github.context.payload
         const client_payload = payload.client_payload
         const action = payload.action
-        const users = client_payload.users
         core.info(`debug action:${github.context.action}`)
         core.info(`debug workflow:${github.context.workflow}`)
 
@@ -133,9 +174,14 @@ async function run() {
             //     users.forEach(onboard)
             //     break
             case "offboard":
+                const users = client_payload.users
+
                 core.setOutput("action", action)
                 core.setOutput("users", JSON.stringify(users))
                 users.forEach(offboard)
+                break
+            case "oktausernamechange":
+                oktausernamechange(client_payload.old_okta_username, client_payload.new_okta_username)
                 break
             default:
                 core.error(`Unsupported action: ${action}`)
@@ -148,9 +194,7 @@ async function run() {
     }
 }
 
-async function test(testData) {
-    let action = "offboard";
-    let users = testData.client_payload.users
+async function test(testData, action) {
 
     console.log("::set-output name=foo::bar")
     core.info("::set-output name=core::bar")
@@ -160,8 +204,12 @@ async function test(testData) {
         //     users.filter(s => s !== "").forEach(onboard)
         //     break
         case "offboard":
+            let users = testData.client_payload.users
             users.filter(s => s !== "").forEach(offboard)
 
+            break
+        case "oktausernamechange":
+            oktausernamechange(testData.client_payload.old_okta_username, testData.client_payload.new_okta_username)
             break
         default:
             core.error(`Unsupported action: ${action}`)
@@ -170,15 +218,19 @@ async function test(testData) {
 }
 
 if (os.platform() === "darwin") {
+    // test({
+    //     "client_payload": {
+    //         "users": [
+    //             "leaver"
+    //         ]
+    //     }
+    // },"offboard")
     test({
         "client_payload": {
-            "users": [
-                "jharte",
-                "",
-                "abcdefg"
-            ]
+            "old_okta_username": "olduid",
+            "new_okta_username": "newuid"
         }
-    })
+    },"oktausernamechange")
 } else {
     await run()
 }
