@@ -21,6 +21,12 @@ function readObject(filename){
     })
 }
 
+// Helper function to write data out to file with trailing newline.
+function writeJsonToFile(data, filename) {
+    let jsonString = JSON.stringify(data, null, 2).concat('\n')
+    writeFileSync(filename,new Uint8Array(Buffer.from(jsonString)));
+}
+
 const exceptionGroupFile = "exception-groups/groups.json";
 const squadsFile = "squads.json";
 const platoonsFile = "platoons.json";
@@ -43,7 +49,7 @@ function offboard(user) {
             })
             if (write) {
                 console.log(`writing new ${exceptionGroupFile} to ${action} user: ${user}`)
-                writeFileSync(exceptionGroupFile,new Uint8Array(Buffer.from(JSON.stringify(data, null, 2))));
+                writeJsonToFile(data, exceptionGroupFile);
             }
         })
         .catch(err => console.error(err));
@@ -78,7 +84,7 @@ function offboard(user) {
             })
             if (write) {
                 console.log(`writing new ${squadsFile} to ${action} user: ${user}`)
-                writeFileSync(squadsFile,new Uint8Array(Buffer.from(JSON.stringify(data, null, 2))));
+                writeJsonToFile(data, squadsFile);
             }
         })
         .catch(err => console.error(err));
@@ -105,7 +111,7 @@ function oktausernamechange(oldoktausername,newoktausername) {
             })
             if (write) {
                 console.log(`writing new ${exceptionGroupFile} to ${action} user: ${oldoktausername}`)
-                writeFileSync(exceptionGroupFile,new Uint8Array(Buffer.from(JSON.stringify(data, null, 2))));
+                writeJsonToFile(data, exceptionGroupFile);
             }
         })
         .catch(err => console.error(err));
@@ -151,7 +157,7 @@ function oktausernamechange(oldoktausername,newoktausername) {
             })
             if (write) {
                 console.log(`writing new ${squadsFile} to ${action} user: ${oldoktausername}`)
-                writeFileSync(squadsFile,new Uint8Array(Buffer.from(JSON.stringify(data, null, 2))));
+                writeJsonToFile(data, squadsFile);
             }
         })
         .catch(err => console.error(err));
