@@ -1,5 +1,5 @@
-name: "Terraorg Butler"
-description: "Perform automation tasks for terraorg, or exception groups"
+name: "Grouping Workflows"
+description: "Perform automation tasks for terraorg formatted squads, exception groups, or new squad schema"
 runs:
   using: 'node16'
   main: 'index.js'

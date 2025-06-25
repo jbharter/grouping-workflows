@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 import * as github from '@actions/github'
-import {readFile, writeFileSync} from 'fs';
+import {readFile, readFileSync, writeFileSync, existsSync, readdirSync, lstatSync} from 'fs';
+import path from 'path';
 import {Buffer} from 'buffer';
 // import * as HCL from 'js-hcl-parser';
 import * as os from 'os';
@@ -21,6 +22,16 @@ function readObject(filename){
     })
 }
 
+function readObjectSync(filename) {
+    const data = readFileSync(filename);
+    let stringData = data.toString();
+    if (filename.endsWith(".json")) {
+        return JSON.parse(stringData);
+    } else {
+        return data;
+    }
+}
+
 // Helper function to write data out to file with trailing newline.
 function writeJsonToFile(data, filename) {
     let jsonString = JSON.stringify(data, null, 2).concat('\n')
@@ -30,30 +41,35 @@ function writeJsonToFile(data, filename) {
 const exceptionGroupFile = "exception-groups/groups.json";
 const squadsFile = "squads.json";
 const platoonsFile = "platoons.json";
+const platoonsDir = "eng_meta_testing/platoons";
+const exceptionSquadsDir = "eng_meta_testing/exception_squads";
 
-function offboard(user) {
+
+async function offboard(user) {
     let action = "offboard";
     core.info(`${action}-ing: ${user}`)
 
-    // TODO: check exception groups
-    readObject(exceptionGroupFile)
-        .then(data => {
-            // do stuff
-            let write = false;
-            Object.entries(data["groups"]).forEach(([group_name,val],squadIndex) => {
-                if (Object.keys(val["members"]).includes(user)) {
-                    console.log(`User: "${user} found in members of exception group: "${group_name}"`)
-                    data["groups"][group_name]["members"] = Object.fromEntries(Object.entries(val["members"]).filter(([locuser, role]) => locuser !== user));
-                    write = true
+    if (existsSync(exceptionGroupFile)) {
+        await readObject(exceptionGroupFile)
+            .then(data => {
+                // do stuff
+                let write = false;
+                Object.entries(data["groups"]).forEach(([group_name,val],squadIndex) => {
+                    if (Object.keys(val["members"]).includes(user)) {
+                        console.log(`User: "${user} found in members of exception group: "${group_name}"`)
+                        data["groups"][group_name]["members"] = Object.fromEntries(Object.entries(val["members"]).filter(([locuser, role]) => locuser !== user));
+                        write = true
+                    }
+                })
+                if (write) {
+                    console.log(`writing new ${exceptionGroupFile} to ${action} user: ${user}`)
+                    writeJsonToFile(data, exceptionGroupFile);
                 }
             })
-            if (write) {
-                console.log(`writing new ${exceptionGroupFile} to ${action} user: ${user}`)
-                writeJsonToFile(data, exceptionGroupFile);
-            }
-        })
-        .catch(err => console.error(err));
-
+            .catch(err => console.error(err));
+    } else {
+        console.log(`exception group file ${exceptionGroupFile} does not exist`)
+    }
 
 
     // TODO: check platoons file, consider a method to replace a platoon/squad lead?
@@ -64,30 +80,99 @@ function offboard(user) {
     //     })
     //     .catch(err => console.error(err));
     // check squads file
-    readObject(squadsFile)
-        .then(data => {
-            // Offboard in squads.json
-            let write = false;
-            data["squads"].forEach((squad,squadIndex) => {
-                squad["team"].forEach((team,teamIndex) => {
-                    if (team["associates"].includes(user)) {
-                        console.log(`User: "${user} found in associates of squad: "${squad.id}", location: ${team.location}`)
-                        data["squads"][squadIndex]["team"][teamIndex]["associates"] = team["associates"].filter(associate => associate !== user);
-                        write = true;
-                    }
-                    if (team["members"].includes(user)) {
-                        console.log(`User: "${user} found in members of squad: "${squad.id}", location: ${team.location}`)
-                        data["squads"][squadIndex]["team"][teamIndex]["members"] = team["members"].filter(associate => associate !== user);
-                        write = true;
-                    }
+    if (existsSync(squadsFile)) {
+        await readObject(squadsFile)
+            .then(data => {
+                // Offboard in squads.json
+                let write = false;
+                data["squads"].forEach((squad,squadIndex) => {
+                    squad["team"].forEach((team,teamIndex) => {
+                        if (team["associates"].includes(user)) {
+                            console.log(`User: "${user} found in associates of squad: "${squad.id}", location: ${team.location}`)
+                            data["squads"][squadIndex]["team"][teamIndex]["associates"] = team["associates"].filter(associate => associate !== user);
+                            write = true;
+                        }
+                        if (team["members"].includes(user)) {
+                            console.log(`User: "${user} found in members of squad: "${squad.id}", location: ${team.location}`)
+                            data["squads"][squadIndex]["team"][teamIndex]["members"] = team["members"].filter(associate => associate !== user);
+                            write = true;
+                        }
+                    })
                 })
+                if (write) {
+                    console.log(`writing new ${squadsFile} to ${action} user: ${user}`)
+                    writeJsonToFile(data, squadsFile);
+                }
             })
-            if (write) {
-                console.log(`writing new ${squadsFile} to ${action} user: ${user}`)
-                writeJsonToFile(data, squadsFile);
+            .catch(err => console.error(err));
+    } else {
+        console.log(`squads file ${squadsFile} does not exist`)
+    }
+
+    // Handle new eng_meta schema for platoons
+    if (existsSync(platoonsDir) && lstatSync(platoonsDir).isDirectory()) {
+        readdirSync(platoonsDir).forEach(platoonFile => {
+            if (platoonFile.endsWith(".json")) {
+                readObject(path.join(platoonsDir, platoonFile))
+                    .then(data => {
+                        // Offboard in <platoon>.json
+                        let write = false;
+                        data["platoon"][0]["squads"].forEach((squad,squadIndex) => {
+                            squad["team"].forEach((team,teamIndex) => {
+                                if (team["associates"].includes(user)) {
+                                    console.log(`[${path.join(platoonsDir, platoonFile)}] User: "${user} found in associates of squad: "${squad.id}", location: ${team.location}`)
+                                    data["platoon"][0]["squads"][squadIndex]["team"][teamIndex]["associates"] = team["associates"].filter(associate => associate !== user);
+                                    write = true;
+                                }
+                                if (team["members"].includes(user)) {
+                                    console.log(`[${path.join(platoonsDir, platoonFile)}] User: "${user} found in members of squad: "${squad.id}", location: ${team.location}`)
+                                    data["platoon"][0]["squads"][squadIndex]["team"][teamIndex]["members"] = team["members"].filter(associate => associate !== user);
+                                    write = true;
+                                }
+                            })
+                        })
+                        if (write) {
+                            console.log(`writing new ${path.join(platoonsDir, platoonFile)} to ${action} user: ${user}`)
+                            writeJsonToFile(data, path.join(platoonsDir, platoonFile));
+                        }
+                    })
+                    .catch(err => console.error(err));
             }
-        })
-        .catch(err => console.error(err));
+        });
+    }
+
+    // Handle new eng_meta schema for exception squads
+    if (existsSync(exceptionSquadsDir) && lstatSync(exceptionSquadsDir).isDirectory()) {
+        readdirSync(exceptionSquadsDir).forEach(exceptionFile => {
+            if (exceptionFile.endsWith(".json")) {
+                readObject(path.join(exceptionSquadsDir, exceptionFile))
+                    .then(data => {
+                        // Offboard in <platoon>.json
+                        let write = false;
+                        data["exceptions"][0]["squads"].forEach((squad,squadIndex) => {
+                            squad["team"].forEach((team,teamIndex) => {
+                                if (team["associates"].includes(user)) {
+                                    console.log(`User: "${user} found in associates of exception squad: "${squad.id}", location: ${team.location}`)
+                                    data["exceptions"][0]["squads"][squadIndex]["team"][teamIndex]["associates"] = team["associates"].filter(associate => associate !== user);
+                                    write = true;
+                                }
+                                if (team["members"].includes(user)) {
+                                    console.log(`User: "${user} found in members of exception squad: "${squad.id}", location: ${team.location}`)
+                                    data["exceptions"][0]["squads"][squadIndex]["team"][teamIndex]["members"] = team["members"].filter(associate => associate !== user);
+                                    write = true;
+                                }
+                            })
+                        })
+                        if (write) {
+                            console.log(`writing new ${path.join(exceptionSquadsDir, exceptionFile)} to ${action} user: ${user}`)
+                            writeJsonToFile(data, path.join(exceptionSquadsDir, exceptionFile));
+                        }
+                    })
+                    .catch(err => console.error(err));
+            }
+        });
+    }
+
     console.log(`end run for user: ${user}`)
 }
 
@@ -184,7 +269,10 @@ async function run() {
 
                 core.setOutput("action", action)
                 core.setOutput("users", JSON.stringify(users))
-                users.forEach(offboard)
+                for(let user in users) {
+                    offboard(user)
+                }
+                //users.forEach(offboard)
                 break
             case "oktausernamechange":
                 oktausernamechange(client_payload.old_okta_username, client_payload.new_okta_username)
@@ -211,7 +299,10 @@ async function test(testData, action) {
         //     break
         case "offboard":
             let users = testData.client_payload.users
-            users.filter(s => s !== "").forEach(offboard)
+            //users.filter(s => s !== "").forEach(offboard)
+            for(const user of users) {
+                await offboard(user)
+            }
 
             break
         case "oktausernamechange":
@@ -224,19 +315,26 @@ async function test(testData, action) {
 }
 
 if (os.platform() === "darwin") {
-    // test({
-    //     "client_payload": {
-    //         "users": [
-    //             "leaver"
-    //         ]
-    //     }
-    // },"offboard")
-    test({
-        "client_payload": {
-            "old_okta_username": "olduid",
-            "new_okta_username": "newuid"
-        }
-    },"oktausernamechange")
+     test({
+         "client_payload": {
+             "users": [
+                 // "tpisar",
+                 // "dwiese",
+                 // "pbharg",
+                 // "rren",
+                 // "ereddy",
+                 // "yulin",
+                 // "tsiebe",
+                 "jharte"
+             ]
+         }
+     },"offboard")
+    //test({
+    //    "client_payload": {
+    //        "old_okta_username": "olduid",
+    //        "new_okta_username": "newuid"
+    //    }
+    //},"oktausernamechange")
 } else {
     await run()
 }
