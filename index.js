@@ -177,6 +177,7 @@ async function offboard(user) {
         console.log(`exception squads directory ${exceptionSquadsDir} does not exist or is not a directory`)
     }
 
+    console.log("test")
     console.log(`end run for user: ${user}`)
 }
 
