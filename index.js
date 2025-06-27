@@ -41,8 +41,8 @@ function writeJsonToFile(data, filename) {
 const exceptionGroupFile = "exception-groups/groups.json";
 const squadsFile = "squads.json";
 const platoonsFile = "platoons.json";
-const platoonsDir = "eng_meta_testing/platoons";
-const exceptionSquadsDir = "eng_meta_testing/exception_squads";
+const platoonsDir = "platoons";
+const exceptionSquadsDir = "exception_squads";
 
 
 async function offboard(user) {
