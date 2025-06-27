@@ -277,7 +277,7 @@ async function run() {
 
                 core.setOutput("action", action)
                 core.setOutput("users", JSON.stringify(users))
-                for(let user in users) {
+                for(let user of users) {
                     console.log(`offboarding user: ${user}`)
                     await offboard(user)
                 }
