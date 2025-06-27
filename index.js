@@ -53,6 +53,7 @@ async function offboard(user) {
     if (existsSync(platoonsDir) && lstatSync(platoonsDir).isDirectory()) {
         console.log(`platoons directory ${platoonsDir} exists, checking for platoon files`)
         readdirSync(platoonsDir).forEach(platoonFile => {
+            console.log(`Processing file: ${platoonFile}`)
             if (platoonFile.endsWith(".json")) {
                 readObject(path.join(platoonsDir, platoonFile))
                     .then(data => {
