@@ -51,6 +51,7 @@ async function offboard(user) {
 
     // Handle new eng_meta schema for platoons
     if (existsSync(platoonsDir) && lstatSync(platoonsDir).isDirectory()) {
+        console.log(`platoons directory ${platoonsDir} exists, checking for platoon files`)
         readdirSync(platoonsDir).forEach(platoonFile => {
             if (platoonFile.endsWith(".json")) {
                 readObject(path.join(platoonsDir, platoonFile))
@@ -276,7 +277,7 @@ async function run() {
                 core.setOutput("action", action)
                 core.setOutput("users", JSON.stringify(users))
                 for(let user in users) {
-                    offboard(user)
+                    await offboard(user)
                 }
                 //users.forEach(offboard)
                 break
@@ -295,9 +296,6 @@ async function run() {
 }
 
 async function test(testData, action) {
-
-    console.log("::set-output name=foo::bar")
-    core.info("::set-output name=core::bar")
 
     switch (action) {
         // case "onboard":
