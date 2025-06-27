@@ -139,6 +139,8 @@ async function offboard(user) {
                     .catch(err => console.error(err));
             }
         });
+    } else {
+        console.log(`platoons directory ${platoonsDir} does not exist or is not a directory`)
     }
 
     // Handle new eng_meta schema for exception squads
@@ -171,6 +173,8 @@ async function offboard(user) {
                     .catch(err => console.error(err));
             }
         });
+    } else {
+        console.log(`exception squads directory ${exceptionSquadsDir} does not exist or is not a directory`)
     }
 
     console.log(`end run for user: ${user}`)
