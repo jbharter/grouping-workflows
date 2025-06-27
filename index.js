@@ -278,6 +278,7 @@ async function run() {
                 core.setOutput("action", action)
                 core.setOutput("users", JSON.stringify(users))
                 for(let user in users) {
+                    console.log(`offboarding user: ${user}`)
                     await offboard(user)
                 }
                 //users.forEach(offboard)
