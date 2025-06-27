@@ -49,66 +49,6 @@ async function offboard(user) {
     let action = "offboard";
     core.info(`${action}-ing: ${user}`)
 
-    if (existsSync(exceptionGroupFile)) {
-        await readObject(exceptionGroupFile)
-            .then(data => {
-                // do stuff
-                let write = false;
-                Object.entries(data["groups"]).forEach(([group_name,val],squadIndex) => {
-                    if (Object.keys(val["members"]).includes(user)) {
-                        console.log(`User: "${user} found in members of exception group: "${group_name}"`)
-                        data["groups"][group_name]["members"] = Object.fromEntries(Object.entries(val["members"]).filter(([locuser, role]) => locuser !== user));
-                        write = true
-                    }
-                })
-                if (write) {
-                    console.log(`writing new ${exceptionGroupFile} to ${action} user: ${user}`)
-                    writeJsonToFile(data, exceptionGroupFile);
-                }
-            })
-            .catch(err => console.error(err));
-    } else {
-        console.log(`exception group file ${exceptionGroupFile} does not exist`)
-    }
-
-
-    // TODO: check platoons file, consider a method to replace a platoon/squad lead?
-    // readObject(platoonsFile)
-    //     .then(data => {
-    //         //console.dir(data);
-    //         // TODO: offboard in platoons.json
-    //     })
-    //     .catch(err => console.error(err));
-    // check squads file
-    if (existsSync(squadsFile)) {
-        await readObject(squadsFile)
-            .then(data => {
-                // Offboard in squads.json
-                let write = false;
-                data["squads"].forEach((squad,squadIndex) => {
-                    squad["team"].forEach((team,teamIndex) => {
-                        if (team["associates"].includes(user)) {
-                            console.log(`User: "${user} found in associates of squad: "${squad.id}", location: ${team.location}`)
-                            data["squads"][squadIndex]["team"][teamIndex]["associates"] = team["associates"].filter(associate => associate !== user);
-                            write = true;
-                        }
-                        if (team["members"].includes(user)) {
-                            console.log(`User: "${user} found in members of squad: "${squad.id}", location: ${team.location}`)
-                            data["squads"][squadIndex]["team"][teamIndex]["members"] = team["members"].filter(associate => associate !== user);
-                            write = true;
-                        }
-                    })
-                })
-                if (write) {
-                    console.log(`writing new ${squadsFile} to ${action} user: ${user}`)
-                    writeJsonToFile(data, squadsFile);
-                }
-            })
-            .catch(err => console.error(err));
-    } else {
-        console.log(`squads file ${squadsFile} does not exist`)
-    }
-
     // Handle new eng_meta schema for platoons
     if (existsSync(platoonsDir) && lstatSync(platoonsDir).isDirectory()) {
         readdirSync(platoonsDir).forEach(platoonFile => {
@@ -175,6 +115,67 @@ async function offboard(user) {
         });
     } else {
         console.log(`exception squads directory ${exceptionSquadsDir} does not exist or is not a directory`)
+    }
+
+
+    if (existsSync(exceptionGroupFile)) {
+        await readObject(exceptionGroupFile)
+            .then(data => {
+                // do stuff
+                let write = false;
+                Object.entries(data["groups"]).forEach(([group_name,val],squadIndex) => {
+                    if (Object.keys(val["members"]).includes(user)) {
+                        console.log(`User: "${user} found in members of exception group: "${group_name}"`)
+                        data["groups"][group_name]["members"] = Object.fromEntries(Object.entries(val["members"]).filter(([locuser, role]) => locuser !== user));
+                        write = true
+                    }
+                })
+                if (write) {
+                    console.log(`writing new ${exceptionGroupFile} to ${action} user: ${user}`)
+                    writeJsonToFile(data, exceptionGroupFile);
+                }
+            })
+            .catch(err => console.error(err));
+    } else {
+        console.log(`exception group file ${exceptionGroupFile} does not exist`)
+    }
+
+
+    // TODO: check platoons file, consider a method to replace a platoon/squad lead?
+    // readObject(platoonsFile)
+    //     .then(data => {
+    //         //console.dir(data);
+    //         // TODO: offboard in platoons.json
+    //     })
+    //     .catch(err => console.error(err));
+    // check squads file
+    if (existsSync(squadsFile)) {
+        await readObject(squadsFile)
+            .then(data => {
+                // Offboard in squads.json
+                let write = false;
+                data["squads"].forEach((squad,squadIndex) => {
+                    squad["team"].forEach((team,teamIndex) => {
+                        if (team["associates"].includes(user)) {
+                            console.log(`User: "${user} found in associates of squad: "${squad.id}", location: ${team.location}`)
+                            data["squads"][squadIndex]["team"][teamIndex]["associates"] = team["associates"].filter(associate => associate !== user);
+                            write = true;
+                        }
+                        if (team["members"].includes(user)) {
+                            console.log(`User: "${user} found in members of squad: "${squad.id}", location: ${team.location}`)
+                            data["squads"][squadIndex]["team"][teamIndex]["members"] = team["members"].filter(associate => associate !== user);
+                            write = true;
+                        }
+                    })
+                })
+                if (write) {
+                    console.log(`writing new ${squadsFile} to ${action} user: ${user}`)
+                    writeJsonToFile(data, squadsFile);
+                }
+            })
+            .catch(err => console.error(err));
+    } else {
+        console.log(`squads file ${squadsFile} does not exist`)
     }
 
     console.log("test")
